@@ -5,4 +5,5 @@ export interface ShortVideoTypes extends VideoItem {
   onVideoEnd: () => void;
   shouldBeCached: boolean;
   isVideoLiked?: boolean;
+  shouldLoad?: boolean;
 }

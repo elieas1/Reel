@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Video, {VideoRef} from 'react-native-video';
 import styles from './ShortVideo.styles';
 import {
@@ -37,6 +37,7 @@ const ShortVideo = ({
   shouldBeCached,
   isVideoLiked,
   views_count,
+  shouldLoad,
   id,
 }: ShortVideoTypes) => {
   const videoRef = useRef<VideoRef>(null);
@@ -46,6 +47,12 @@ const ShortVideo = ({
   const deviceHeight = useActualHeight();
 
   const centerHeartRef = useRef<HeartAnimationHandle>();
+
+  useEffect(() => {
+    if (isVisible) {
+      videoRef.current?.seek(0);
+    }
+  }, [isVisible]);
 
   const scaleValue = useRef(new Animated.Value(1)).current;
   const opacityValue = useRef(new Animated.Value(0)).current;
@@ -159,8 +166,12 @@ const ShortVideo = ({
       <Video
         ref={videoRef}
         style={[styles.video, {height: deviceHeight}]}
-        source={isVisible ? {uri: videoUrl, type: 'mp4'} : undefined}
-        resizeMode="stretch"
+        source={
+          isVisible || shouldLoad ? {uri: videoUrl, type: 'mp4'} : undefined
+        }
+        // videos used are not ideal for short type videos,
+        // all resize mode options will not work as a short should
+        resizeMode="cover"
         onProgress={handleProgress}
         playInBackground={false}
         paused={!isVisible || isVideoPaused}

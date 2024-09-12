@@ -66,6 +66,7 @@ const HomeScreen = () => {
         id={id}
         isVideoLiked={liked}
         isVisible={index === currentIndex}
+        shouldLoad={index === currentIndex - 1 || index === currentIndex + 1}
         onVideoEnd={onVideoEnd}
         likes_count={likes_count}
         description={description}
